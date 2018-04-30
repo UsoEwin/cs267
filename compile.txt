@@ -1,0 +1,2 @@
+g++ -std=c++11 -O3 go_Decision.cpp -o go
+nvcc -m64 -O3 -o cudago go_Decision.cpp  goai.cu -arch=compute_37 -code=sm_37
