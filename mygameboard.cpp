@@ -293,40 +293,64 @@ int kernelMonteCarlo(GameBoard* myboard, int n){
 	return maxpos;
 }
 
-void getTerr(GameBoard* this_board) {
-	int s = this_board->size;
+void getTerr(GameBoard* myboard) {
+	int size = myboard->size;
 
-	for (int i=0; i< s*s; i++){
-		this_board->eval[i] = 0;
+	for (int i=0; i< size*size; i++){
+		myboard->eval[i] = 0;
 	}
 
 	int idx, dist, diff;
-	for (int r = 0; r < s; r++){
-		for (int c = 0; c < s; c++){
-			idx = r * s + c;
-			if (this_board->draw[idx] != 0){
-				diff = this_board->draw[idx];
-				for(int i = max(r - 4, 0); i < min(r + 5, s); i++){
-					for(int j = max(c - 4, 0); j < min(c + 5, s); j++){
+	for (int r = 0; r < size; r++){
+		for (int c = 0; c < size; c++){
+			idx = r * size + c;
+			if (myboard->draw[idx] != 0){
+				diff = myboard->draw[idx];
+				for(int i = max(r - 4, 0); i < min(r + 5, size); i++){
+					for(int j = max(c - 4, 0); j < min(c + 5, size); j++){
 						dist = abs(r - i) + abs(c - j);
-						this_board->eval[i * s + j] += diff * map(dist);
+						myboard->eval[i * size + j] += diff * map(dist);
 					}
 				}
 			}
 		}
 	}
 
-	for(int i = 0; i < s * s; i++) {
-    	if(this_board->draw[i] == 1) {
-      		if(this_board->eval[i] <= 0) this_board->classify[i] = -1; //dead
-      		else this_board->classify[i] = 1;
+	for(int i = 0; i < size * size; i++) {
+    	if(myboard->draw[i] == 1) {
+      		if(myboard->eval[i] <= 0) myboard->classify[i] = -1; //dead
+      		else myboard->classify[i] = 1;
     	}
-    	else if(this_board->draw[i] == -1) {
-      		if(this_board->eval[i] >= 0) this_board->classify[i] = 1; //dead
-      		else this_board->classify[i] = -1;
+    	else if(myboard->draw[i] == -1) {
+      		if(myboard->eval[i] >= 0) myboard->classify[i] = 1; //dead
+      		else myboard->classify[i] = -1;
     	}
-    	else if(this_board->eval[i] > 0) this_board->classify[i] = 1;
-    	else if(this_board->eval[i] < 0) this_board->classify[i] = -1;
-    	else this_board->classify[i] = 0;
+    	else if(myboard->eval[i] > 0) myboard->classify[i] = 1;
+    	else if(myboard->eval[i] < 0) myboard->classify[i] = -1;
+    	else myboard->classify[i] = 0;
   	}
 }
+/*
+
+void board_printclassify(GameBoard* myboard){
+	int s = myboard->size;
+	for (int i = 0; i < s; i++){
+		for (int j = 0; j < s; j++){
+			if (myboard->classify[i*s+j] != 0){
+				if (myboard->classify[i*s+j] == 1){
+					printf(" B");
+				} else {
+					printf(" W");
+				}
+			} else {
+				printf(" .");
+			}
+		}
+		printf("\n");
+	}
+	for (int i=0; i<100; i++){
+		printf("#");
+	}
+	printf("\n");
+}
+*/

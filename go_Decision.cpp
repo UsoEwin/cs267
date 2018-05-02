@@ -31,7 +31,7 @@ int main(int argc, char** argv)
         step+=1;
         addStone(board, row, col, 1);
         
-       	std::clock_t start;
+       	std::clock_t start = 0;
        	double duration = 0;
         next_move = kernelMonteCarlo(board, 3);
         duration = (std::clock() - start)/(double)CLOCKS_PER_SEC;
