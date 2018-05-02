@@ -5,8 +5,8 @@
 #include <getopt.h>
 #include <iostream>
 #include <string>
-#include "mygameboard.cpp"
-#include "readfile.h"
+#include "serial.cpp"
+#include "board.h"
 #include <ctime>
 using namespace std;
 

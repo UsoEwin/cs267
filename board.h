@@ -1,5 +1,5 @@
-#ifndef READFILE_H
-#define READFILE_H
+#ifndef BOARD_H
+#define BOARD_H
 
 struct GameBoard{
 	int size;

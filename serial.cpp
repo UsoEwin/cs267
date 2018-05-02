@@ -1,4 +1,4 @@
-#include "readfile.h"
+#include "board.h"
 
 //stones
 #define WHITE (-1)
