@@ -8,6 +8,25 @@
 //#include "mygameboard.cpp"
 #include "board.h"
 #include <ctime>
+//stones
+#define WHITE (-1)
+#define BLACK (1)
+void buildBoard(GameBoard* myboard, int size){
+	myboard->size = size;
+	//for a new game, always let black play first
+	myboard->current_player_state = BLACK;
+	myboard->last_move = WHITE;
+	for (int i = 0; i < size; ++i){
+		for (int j = 0; j < size; ++j){	
+			//initialize if this a stone or not
+			myboard->draw[i*size+j] = 0;
+			myboard->eval[i*size+j] = 0;
+			myboard->classify[i*size+j] = 0;
+		}
+	}
+	return;
+}
+
 using namespace std;
 void printBoard(GameBoard* myboard){
 	for (int i = 0; i < myboard->size; ++i){
