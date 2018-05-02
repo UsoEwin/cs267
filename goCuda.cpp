@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 //#include "mygameboard.cpp"
-#include "mygoai.cu"
 #include "board.h"
 #include <ctime>
 using namespace std;

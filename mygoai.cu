@@ -13,11 +13,6 @@
 
 
 struct GameBoard;
-void host_clear_visited(GameBoard* this_board);
-void host_board_construct(GameBoard* this_board, int s);
-int host_board_addStone(GameBoard* this_board, int row, int col, int state);
-void host_delete_stone(GameBoard* this_board, int row, int col);
-int host_get_liberties(GameBoard* this_board, int row, int col);
 int checkStone(GameBoard* myboard, int row, int col, int state);
 
 
