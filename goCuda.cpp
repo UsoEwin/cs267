@@ -6,9 +6,28 @@
 #include <iostream>
 #include <string>
 //#include "mygameboard.cpp"
+#include "mygoai.h"
 #include "board.h"
 #include <ctime>
 using namespace std;
+void printBoard(GameBoard* myboard){
+	for (int i = 0; i < myboard->size; ++i){
+		for (int j = 0; j < myboard->size; ++j){
+			if (myboard->draw[i*myboard->size+j]){
+				if (myboard->draw[i*myboard->size+j] == BLACK)
+					printf(" x");
+				else printf(" o"); //WHITE
+			}
+			else printf(" .");
+		}
+		printf("\n");
+	}
+	for (int i = 0; i < myboard->size; ++i){
+		printf(" $");
+	}
+	printf("\n");
+	return;
+}
 
 int Monte_Carlo_Cuda(GameBoard* this_board, int n);
 
