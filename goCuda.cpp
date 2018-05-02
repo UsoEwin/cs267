@@ -5,7 +5,7 @@
 #include <getopt.h>
 #include <iostream>
 #include <string>
-#include "mygameboard.cpp"
+#include "serial.cpp"
 #include "board.h"
 #include <ctime>
 //stones
