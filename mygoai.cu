@@ -3,6 +3,14 @@
 #include <cuda_runtime.h>
 #include <driver_functions.h>
 #include "board.h"
+//stones
+#define WHITE (-1)
+#define BLACK (1)
+//operators
+#define min(a,b) ((a)<(b)?(a):(b))
+#define max(a,b) ((a)>(b)?(a):(b))
+#define abs(a) ((a)>=(0)?(a):(-a))
+
 
 struct GameBoard;
 void host_clear_visited(GameBoard* this_board);
@@ -10,7 +18,8 @@ void host_board_construct(GameBoard* this_board, int s);
 int host_board_addStone(GameBoard* this_board, int row, int col, int state);
 void host_delete_stone(GameBoard* this_board, int row, int col);
 int host_get_liberties(GameBoard* this_board, int row, int col);
-int host_checkStone(GameBoard* this_board, int row, int col, int state);
+int checkStone(GameBoard* myboard, int row, int col, int state);
+
 
 inline void cleanBoard(GameBoard* myboard){
 	for (int i = 0; i < 361; ++i)
