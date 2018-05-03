@@ -7,7 +7,6 @@
 #include <string>
 #include "go.h"
 #include <ctime>
-//stones
 
 
 using namespace std;
@@ -15,7 +14,6 @@ using namespace std;
 
 int cudaMonteCarlo(GameBoard* this_board, int n);
 
-// no-interface version
 int main(int argc, char** argv)
 {
     int size = 19;
@@ -49,7 +47,7 @@ int main(int argc, char** argv)
         printBoard(board);
         printf("Time is  %f\n", duration);
         printf("Step is  %d\n", step);
-        myfile << duration << " "<<step<<endl; 
+        //myfile << duration << " "<<step<<endl; 
         cin >> row;
     }
     

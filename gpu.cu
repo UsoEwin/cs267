@@ -25,12 +25,76 @@ int cudaaddStone(GameBoard* myboard, int row, int col, int state){
 		myboard->draw[row*size+col] = 0;
 		return 0;
 	}
-	//myboard->last_move = row*size+col;
-	//getTerr(myboard);
-	//for test purpose
-	//printClasearchify(myboard);
 	return 1;
 }
+
+__global__ void
+kernel_monte_carlo(int* stones, int s, int* result){
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+    if (stones[index * s * s] != -2){
+        int eval[361];
+        for (int i=0; i< s*s; i++){
+            eval[i] = 0;
+        }
+
+        int idx, dist, diff;
+        //calculate eval
+        for (int r = 0; r < s; r++){
+            for (int c = 0; c < s; c++){
+                idx = r * s + c;
+                if (stones[idx + index * s * s] != 0){
+                    diff = stones[idx + index * s * s];
+
+                    int i1,i2,j1,j2;
+
+                    if (r-4 > 0){i1 = r-4;} else {i1=0;}
+                    if (r+5 < s){i2 = r+5;} else {i2=s;}
+                    if (c-4 > 0){j1 = c-4;} else {j1=0;}
+                    if (c+5 < s){j2 = c+5;} else {j2=s;}
+
+                    for(int i = i1; i < i2; i++){
+                        for(int j = j1; j < j2; j++){
+
+                            int ab1, ab2,m;
+
+                            if (r-i > 0){ ab1 = r-i;}
+                            else {ab1 = i-r;}
+                            if (c-j > 0){ ab2 = c-j;}
+                            else {ab2 = j-c;}
+                            dist = ab1+ab2;
+                            switch(dist) {
+                            case 4 : m = 1; break;
+                            case 3 : m = 2; break;
+                            case 2 : m = 4; break;
+                            case 1 : m = 8; break;
+                            case 0 : m = 16; break;
+                            default: m = 0; break;
+
+                            }
+                            eval[i * s + j] += diff * m;
+                        }
+                    }
+                }
+            }
+        }
+
+        int w_count = 0;
+        for(int i = 0; i < s * s; i++) {
+            if(stones[i + index * s * s] == 1) {
+                if(eval[i] < 0) w_count += 1;
+                else w_count -= 1;
+            }
+            else if(stones[i + index * s * s] == -1) {
+                if(eval[i] > 0) w_count -= 1;
+                else w_count += 1;
+            }
+            else if(eval[i] > 0) w_count -= 1;
+            else if(eval[i] < 0) w_count += 1;
+        }
+        result[index] = w_count;
+    }
+}
+
 
 int cudaMonteCarlo(GameBoard* this_board, int n) {
     int s = this_board->size;
@@ -117,30 +181,13 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     cudaMalloc(&device_result, num * sizeof(int));
     cudaMemcpy(device_result, result, num * sizeof(int), cudaMemcpyHostToDevice);
 
-    // size_t limit = 0;
-    // cudaDeviceGetLimit(&limit, cudaLimitStackSize);
-    // printf("stack size = %u\n", (unsigned)limit);
-    // limit = 65535;
-    // cudaDeviceSetLimit(cudaLimitStackSize, limit);
-    // cudaDeviceGetLimit(&limit, cudaLimitStackSize);
-    // printf("stack size = %u\n", (unsigned)limit);
-
     kernel_monte_carlo<<<blocks, threadsPerBlock>>>(device_stones, s, device_result);
     cudaThreadSynchronize();
 
     cudaMemcpy(result, device_result, num * sizeof(int), cudaMemcpyDeviceToHost);
-    // for (int i=0; i < num; i++){
-    //     printf("(%d, %d) -> %d\n", move_seq[i * n], move_seq[i*n+1], result[i]);
-    // }
-    // printf("\n");
 
-    // for (int idx = 0; idx < num; idx ++){
-    //     if (result[idx] > max_val){
-    //         max_val = result[idx];
-    //         max_pos = move_seq[idx * n];
-    //     }
-    // }
 
+    //can be parallized by omp or whatever
     int max_pos = rand() % (s * s);
     float max_val = -101.0;
     int local_sum = 0;
