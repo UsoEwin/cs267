@@ -325,8 +325,8 @@ int Monte_Carlo_Cuda(GameBoard* this_board, int n) {
     cudaMemcpy(device_result, result, num * sizeof(int), cudaMemcpyHostToDevice);
 
     // size_t limit = 0;
-    // cudaDeviceGetLimit(&limit, cudaLimitStackSize);
-    // printf("stack size = %u\n", (unsigned)limit);
+     cudaDeviceGetLimit(&limit, cudaLimitStackSize);
+     printf("stack size = %u\n", (unsigned)limit);
     // limit = 65535;
     // cudaDeviceSetLimit(cudaLimitStackSize, limit);
     // cudaDeviceGetLimit(&limit, cudaLimitStackSize);
