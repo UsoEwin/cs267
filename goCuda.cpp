@@ -5,17 +5,15 @@
 #include <getopt.h>
 #include <iostream>
 #include <string>
-#include "serial.cpp"
-#include "board.h"
+#include "go.h"
 #include <ctime>
 //stones
-#define WHITE (-1)
-#define BLACK (1)
+
 
 using namespace std;
 
 
-int Monte_Carlo_Cuda(GameBoard* this_board, int n);
+int cudaMonteCarlo(GameBoard* this_board, int n);
 
 // no-interface version
 int main(int argc, char** argv)
@@ -23,11 +21,11 @@ int main(int argc, char** argv)
     int size = 19;
     GameBoard* board = new GameBoard;
 
-    ofstream myfile ("time_cuda.txt");
-    if (myfile.is_open())
-    {
-        printf("file opened\n");
-    }
+    //ofstream myfile ("time_cuda.txt");
+    //if (myfile.is_open())
+    //{
+    //    printf("file opened\n");
+    //}
     
     buildBoard(board,size);
     int row, col, next_move,step;
@@ -41,7 +39,7 @@ int main(int argc, char** argv)
 
        	std::clock_t start;
        	double duration = 0;
-        next_move = Monte_Carlo_Cuda(board, 3);
+        next_move = cudaMonteCarlo(board, 3);
         duration = (std::clock() - start)/(double)CLOCKS_PER_SEC;
         printf("add white stone %d\n", next_move);
 
@@ -55,7 +53,7 @@ int main(int argc, char** argv)
         cin >> row;
     }
     
-    myfile.close();
+    //myfile.close();
     delete board;
     return 0;
 }

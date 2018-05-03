@@ -5,11 +5,14 @@
 #include <getopt.h>
 #include <iostream>
 #include <string>
-#include "go.h"
+#include "serial.cpp"
+#include "board.h"
 #include <ctime>
 using namespace std;
 
+int Monte_Carlo_Cuda(GameBoard* this_board, int n);
 
+// no-interface version
 int main(int argc, char** argv)
 {
     int size = 19;
@@ -30,7 +33,7 @@ int main(int argc, char** argv)
         
        	std::clock_t start = 0;
        	double duration = 0;
-        next_move = serialkernelMonteCarlo(board, 3);
+        next_move = kernelMonteCarlo(board, 3);
         duration = (std::clock() - start)/(double)CLOCKS_PER_SEC;
         printf("add white stone %d\n", next_move);
 
