@@ -117,29 +117,11 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     cudaMalloc(&device_result, num * sizeof(int));
     cudaMemcpy(device_result, result, num * sizeof(int), cudaMemcpyHostToDevice);
 
-    // size_t limit = 0;
-    // cudaDeviceGetLimit(&limit, cudaLimitStackSize);
-    // printf("stack size = %u\n", (unsigned)limit);
-    // limit = 65535;
-    // cudaDeviceSetLimit(cudaLimitStackSize, limit);
-    // cudaDeviceGetLimit(&limit, cudaLimitStackSize);
-    // printf("stack size = %u\n", (unsigned)limit);
 
     kernel_monte_carlo<<<blocks, threadsPerBlock>>>(device_stones, s, device_result);
     cudaThreadSynchronize();
 
     cudaMemcpy(result, device_result, num * sizeof(int), cudaMemcpyDeviceToHost);
-    // for (int i=0; i < num; i++){
-    //     printf("(%d, %d) -> %d\n", move_seq[i * n], move_seq[i*n+1], result[i]);
-    // }
-    // printf("\n");
-
-    // for (int idx = 0; idx < num; idx ++){
-    //     if (result[idx] > max_val){
-    //         max_val = result[idx];
-    //         max_pos = move_seq[idx * n];
-    //     }
-    // }
 
     int max_pos = rand() % (s * s);
     float max_val = -101.0;

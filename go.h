@@ -50,8 +50,6 @@ int countLiberty(GameBoard* myboard, int row, int col);
 int checkStone(GameBoard* myboard, int row, int col, int state);
 //compute power of a number
 inline int raisePwr(int num, int times);
-//using cuda to add a stone, parallizing the check score part
-int cudaaddStone(GameBoard* myboard, int row, int col, int state);
 
 //kernel function for serial MonteCarlo
 int serialkernelMonteCarlo(GameBoard* myboard, int n);
