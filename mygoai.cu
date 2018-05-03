@@ -13,16 +13,16 @@
 
 
 struct GameBoard;
-int checkStone(GameBoard* myboard, int row, int col, int state);
+int cudacheckStone(GameBoard* myboard, int row, int col, int state);
 
 
-inline void cleanBoard(GameBoard* myboard){
+inline void cudacleanBoard(GameBoard* myboard){
 	for (int i = 0; i < 361; ++i)
 		myboard->visited[i] = 0;
 	return;
 }
 
-void buildBoard(GameBoard* myboard, int size){
+void cudabuildBoard(GameBoard* myboard, int size){
 	myboard->size = size;
 	//for a new game, always let black play first
 	myboard->current_player_state = BLACK;
@@ -38,7 +38,7 @@ void buildBoard(GameBoard* myboard, int size){
 	return;
 }
 
-int addStone(GameBoard* myboard, int row, int col, int state){
+int cudaaddStone(GameBoard* myboard, int row, int col, int state){
 	//check boundary
 	if (row < 0 || row >= myboard->size || col < 0 || col >= myboard->size )
 		return 0;
@@ -60,7 +60,7 @@ int addStone(GameBoard* myboard, int row, int col, int state){
 	return 1;
 }
 
-void deleteStone(GameBoard* myboard, int row, int col){
+void cudadeleteStone(GameBoard* myboard, int row, int col){
 	//recursively traverse
 	int size = myboard->size;
 	if (myboard->visited[row*size+col])
@@ -70,25 +70,25 @@ void deleteStone(GameBoard* myboard, int row, int col){
 	//make sure not hit the boundary
 	if (row > 0){	
 		if (myboard->draw[(row-1)*size+col] == state) {
-			deleteStone(myboard, row-1, col);
+			cudadeleteStone(myboard, row-1, col);
 			myboard->draw[(row-1)*size+col] = 0;
 		}
 	}	
 	if(row < size - 1){
 		if(myboard->draw[(row+1)*size+col] == state){
-			deleteStone(myboard, row+1, col);
+			cudadeleteStone(myboard, row+1, col);
 			myboard->draw[(row+1)*size+col] = 0;
 		}
 	}
 	if (col>0){
 		if (myboard->draw[row*size+col-1] == state){
-			deleteStone(myboard, row, col-1);
+			cudadeleteStone(myboard, row, col-1);
 			myboard->draw[row*size+col-1] = 0;
 		}
 	}
 	if (col<size-1){
 		if (myboard->draw[row*size+col+1] == state){
-			deleteStone(myboard, row, col+1);
+			cudadeleteStone(myboard, row, col+1);
 			myboard->draw[row*size+col+1] = 0;
 		}
 	}
@@ -96,7 +96,7 @@ void deleteStone(GameBoard* myboard, int row, int col){
 	return;
 }
 
-int countLiberty(GameBoard* myboard, int row, int col){
+int cudacountLiberty(GameBoard* myboard, int row, int col){
 	int size = myboard->size;
 	int count = 0;
 	//check boundary
@@ -106,25 +106,25 @@ int countLiberty(GameBoard* myboard, int row, int col){
 	int state = myboard->draw[row*size+col];
 	if (row > 0){	
 		if (myboard->draw[(row-1)*size+col] == state) 
-			count += countLiberty(myboard,row-1,col);
+			count += cudacountLiberty(myboard,row-1,col);
 		//same color or no opponent stone
 		else count += (myboard->draw[(row-1)*size+col] == 0);
 	}
 	if (row < size-1){	
 		if (myboard->draw[(row+1)*size+col] == state) 
-			count += countLiberty(myboard,row+1,col);
+			count += cudacountLiberty(myboard,row+1,col);
 		//same color or no opponent stone
 		else count += (myboard->draw[(row+1)*size+col] == 0);
 	}
 	if (col > 0){	
 		if (myboard->draw[row*size+col-1] == state) 
-			count += countLiberty(myboard,row,col-1);
+			count += cudacountLiberty(myboard,row,col-1);
 		//same color or no opponent stone
 		else count += (myboard->draw[row*size+col-1] == 0);
 	}
 	if (col < size-1){	
 		if (myboard->draw[row*size+col+1] == state) 
-			count += countLiberty(myboard,row,col+1);
+			count += cudacountLiberty(myboard,row,col+1);
 		//same color or no opponent stone
 		else count += (myboard->draw[row*size+col+1] == 0);
 	}
@@ -132,7 +132,7 @@ int countLiberty(GameBoard* myboard, int row, int col){
 	return count;
 }
 
-int checkStone(GameBoard* myboard, int row, int col, int state){
+int cudacheckStone(GameBoard* myboard, int row, int col, int state){
 	int neighbors[4];
 	int size = myboard->size;
 	//set the boundary
@@ -147,7 +147,7 @@ int checkStone(GameBoard* myboard, int row, int col, int state){
 
 	int flag = 1;
 	//dead
-	if (!countLiberty(myboard, row, col))
+	if (!cudacountLiberty(myboard, row, col))
 		flag = 0;
 	int indr,indc;
 	for (int i = 0; i < 4; ++i)
@@ -155,11 +155,11 @@ int checkStone(GameBoard* myboard, int row, int col, int state){
 		if (neighbors[i] != -1 && myboard->draw[neighbors[i]] == -state){
 			indr = neighbors[i]/size;
 			indc = neighbors[i]%size;
-			cleanBoard(myboard);
+			cudacleanBoard(myboard);
 			//dead
-			if (!countLiberty(myboard, indr, indc)){
-				cleanBoard(myboard);
-				deleteStone(myboard, indr, indc);
+			if (!cudacountLiberty(myboard, indr, indc)){
+				cudacleanBoard(myboard);
+				cudadeleteStone(myboard, indr, indc);
 				flag = 1;
 			}
 		}
@@ -233,7 +233,7 @@ kernel_monte_carlo(int* stones, int s, int* result){
     }
 }
 
-static inline int raisePwr(int num, int times){
+static inline int cudaraisePwr(int num, int times){
 	int pwr = 1;
 	for (int i = 0; i < times; ++i)
 		pwr *= num;
@@ -245,7 +245,7 @@ int Monte_Carlo_Cuda(GameBoard* this_board, int n) {
     if (n == 2 and s == 19) ss = 8;
     if (n == 3 and s == 9) ss = 5;
     if (n == 3 and s == 19) ss = 4;
-    int num = raisePwr(ss, 2*n);
+    int num = cudaraisePwr(ss, 2*n);
     int partial_num = int(num / (ss * ss));
 
     const int threadsPerBlock = 128;
@@ -286,7 +286,7 @@ int Monte_Carlo_Cuda(GameBoard* this_board, int n) {
 
     for (int idx = 0; idx < num; idx ++){
         GameBoard* next_board = new GameBoard;
-        buildBoard(next_board, s);
+        cudabuildBoard(next_board, s);
         for (int r = 0; r < s; r++){
             for (int c = 0; c < s; c++){
                 next_board->draw[r * s + c] = this_board->draw[r * s + c];
@@ -298,7 +298,7 @@ int Monte_Carlo_Cuda(GameBoard* this_board, int n) {
         int cur_flag;
         for (int k=0; k<n; k++){
             type *= (-1);
-            cur_flag = addStone(next_board, move_seq[idx * n + k] / s, move_seq[idx * n + k] % s, -1);
+            cur_flag = cudaaddStone(next_board, move_seq[idx * n + k] / s, move_seq[idx * n + k] % s, -1);
             if (cur_flag == 0){
                 flag = 0;
                 break;
