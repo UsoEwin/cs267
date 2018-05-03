@@ -48,7 +48,7 @@ int cudaaddStone(GameBoard* myboard, int row, int col, int state){
 	//first put the stone, then check the state
 	myboard->draw[row*size+col] = state;
 
-	if (!checkStone(myboard, row, col, state)){
+	if (!cudacheckStone(myboard, row, col, state)){
 		//get removed
 		myboard->draw[row*size+col] = 0;
 		return 0;
