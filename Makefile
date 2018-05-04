@@ -17,4 +17,4 @@ serial:
 clean:
 	rm -f $(serialtargets) $(cudatargets) *.txt *.o
 cuda:
-	$(NVCC) $(NVFLAGS) -o $(cudasources)
+	$(NVCC) $(NVFLAGS) -o $(cudatargets) $(cudasources)
