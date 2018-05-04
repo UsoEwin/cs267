@@ -1,5 +1,9 @@
 #include "go.h"
 
+#define OMP 1
+#if OMP == 1
+	#include <omp.h>
+#endif
 inline int raisePwr(int num, int times){
 	int pwr = 1;
 	for (int i = 0; i < times; ++i)
@@ -35,6 +39,11 @@ int serialkernelMonteCarlo(GameBoard* myboard, int n){
 	float maxval = -101.0;
 
 	int nextstep;
+	#if OMP == 1
+		omp_set_num_threads(4);
+		#pragma omp parallel
+		#pragma omp for
+	#endif
 	for (int ii=xcor; ii<xcor + search; ii++){
 		for (int jj=ycor; jj<ycor + search; jj++){
 			nextstep = ii * size + jj;

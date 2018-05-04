@@ -7,6 +7,7 @@
 #include <string>
 #include "go.h"
 #include <ctime>
+#include <omp.h>
 using namespace std;
 
 

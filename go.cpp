@@ -1,5 +1,12 @@
 //ultility cpp file, includes all board functions
 #include "go.h"
+#include <omp.h>
+//change this line depends you want omp or not
+#define OMP 1
+#define TRIVIALOMP 0
+#if OMP == 1
+	#include <omp.h>
+#endif
 //functions for compute MCTS distance
 inline int map(int dist){
 	switch(dist) {
@@ -23,6 +30,10 @@ void buildBoard(GameBoard* myboard, int size){
 	//for a new game, always let black play first
 	myboard->current_player_state = BLACK;
 	myboard->last_move = WHITE;
+	#if TRIVIALOMP == 1
+		omp_set_num_threads(4);
+		#pragma omp parallel for
+	#endif
 	for (int i = 0; i < size; ++i){
 		for (int j = 0; j < size; ++j){	
 			//initialize if this a stone or not
@@ -36,6 +47,10 @@ void buildBoard(GameBoard* myboard, int size){
 
 //utility function to print the board
 void printBoard(GameBoard* myboard){
+	#if TRIVIALOMP == 1
+		omp_set_num_threads(4);
+		#pragma omp parallel for
+	#endif
 	for (int i = 0; i < myboard->size; ++i){
 		for (int j = 0; j < myboard->size; ++j){
 			if (myboard->draw[i*myboard->size+j]){
@@ -192,8 +207,12 @@ void getTerr(GameBoard* myboard) {
 	for (int i=0; i< size*size; i++){
 		myboard->eval[i] = 0;
 	}
-
 	int idx, dist, diff;
+	#if TRIVIALOMP == 1
+		omp_set_num_threads(19);
+		#pragma omp parallel for
+	#endif
+	
 	for (int r = 0; r < size; r++){
 		for (int c = 0; c < size; c++){
 			idx = r * size + c;
