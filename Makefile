@@ -13,7 +13,7 @@ serialtargets = serialgo
 cudatargets = cudago
 
 serial:
-	$(CC) $(CFLAGS) -o $(serialtargets) $(serialsources)
+	$(CC) $(CFLAGS) -o $(serialtargets) $(cudatargets)
 clean:
 	rm -f $(serialtargets) $(cudatargets) *.txt *.o
 cuda:
