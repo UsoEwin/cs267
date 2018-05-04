@@ -184,29 +184,7 @@ int checkStone(GameBoard* myboard, int row, int col, int state){
 	}
 	return flag;
 }
-/*
-int cudaaddStone(GameBoard* myboard, int row, int col, int state){
-	//check boundary
-	if (row < 0 || row >= myboard->size || col < 0 || col >= myboard->size )
-		return 0;
-	int size = myboard->size;
-	//stone exist
-	if(myboard->draw[row*size+col]) return 0; 
-	//first put the stone, then check the state
-	myboard->draw[row*size+col] = state;
 
-	if (!cudacheckStone(myboard, row, col, state)){
-		//get removed
-		myboard->draw[row*size+col] = 0;
-		return 0;
-	}
-	//myboard->last_move = row*size+col;
-	//getTerr(myboard);
-	//for test purpose
-	//printClasearchify(myboard);
-	return 1;
-}
-*/
 
 void getTerr(GameBoard* myboard) {
 	int size = myboard->size;

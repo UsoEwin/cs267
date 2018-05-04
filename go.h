@@ -56,6 +56,5 @@ int serialkernelMonteCarlo(GameBoard* myboard, int n);
 //cuda
 int cudaMonteCarlo(GameBoard* this_board, int n);
 //removed the count territory function from that
-//int cudaaddStone(GameBoard* myboard, int row, int col, int state);
 
 #endif

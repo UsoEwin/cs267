@@ -1,50 +1,20 @@
 
-EXECUTABLE := cudago
+CC = g++
+NVCC = nvcc
 
-CU_FILES   := goai.cu
+CFLAGS = -std=c++11 -fopenmp
+# for k80
+NVFLAGS = -O3 -arch=compute_37 -code=sm_37
+#nvcc -O3  -o cudago goCuda.cpp gpu.cu go.cpp -arch=compute_37 -code=sm_37
+#g++ -std=c++11 -fopenmp -O3 goSerial.cpp serial.cpp go.cpp -o go
+cudasources = goCuda.cpp gpu.cu go.cpp
+serialsources = goSerial.cpp serial.cpp go.cpp
+serialtargets = serialgo
+cudatargets = cudago
 
-CU_DEPS    :=
-
-CC_FILES   := go_Decision.cpp
-
-ARCH=$(shell uname | sed -e 's/-.*//g')
-
-OBJDIR=objs
-CXX=g++ -m64
-CXXFLAGS=-O3 -Wall
-ifeq ($(ARCH), Darwin)
-# Building on mac
-LDFLAGS=-L/usr/local/depot/cuda-8.0/lib/ -lcudart
-else
-# Building on Linux
-LDFLAGS=-L/usr/local/depot/cuda-8.0/lib64/ -lcudart
-endif
-NVCC=nvcc
-NVCCFLAGS=-O3 -m64 --gpu-architecture compute_35
-
-
-OBJS=$(OBJDIR)/go_Decision.o  $(OBJDIR)/goai.o
-
-
-.PHONY: dirs clean
-
-default: $(EXECUTABLE)
-
-dirs:
-		mkdir -p $(OBJDIR)/
-
+serial:
+	$(CC) $(CFLAGS) -o $(serialtargets) $(serialsources)
 clean:
-		rm -rf $(OBJDIR) *.ppm *~ $(EXECUTABLE)
-
-$(EXECUTABLE): dirs $(OBJS)
-		$(CXX) $(CXXFLAGS) -o $@ $(OBJS) 
-
-$(OBJDIR)/%.o: %.cpp
-		$(CXX) $< $(CXXFLAGS) -c -o $@
-
-$(OBJDIR)/%.o: %.cu
-		$(NVCC) $< $(NVCCFLAGS) -c -o $@
-
-
-nvcc -m64 -O3 -o cudaSearch objs/solve.o objs/readfile.o -arch=compute_37 -code=sm_37
-nvcc -m64 -O3 -o cudago objs/go_Decision.o  objs/goai.o -arch=compute_37 -code=sm_37
+	rm -f $(serialtargets) $(cudatargets) *.txt *.o
+cuda:
+	$(NVCC) $(NVFLAGS) -o $(cudasources)
