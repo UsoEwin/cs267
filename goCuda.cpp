@@ -19,11 +19,11 @@ int main(int argc, char** argv)
     int size = 19;
     GameBoard* board = new GameBoard;
 
-    //ofstream myfile ("time_cuda.txt");
-    //if (myfile.is_open())
-    //{
-    //    printf("file opened\n");
-    //}
+    ofstream myfile ("time_cuda.txt");
+    if (myfile.is_open())
+    {
+        printf("file opened\n");
+    }
     
     buildBoard(board,size);
     int row, col, next_move,step;
@@ -47,11 +47,11 @@ int main(int argc, char** argv)
         printBoard(board);
         printf("Time is  %f\n", duration);
         printf("Step is  %d\n", step);
-        //myfile << duration << " "<<step<<endl; 
+        myfile << duration << " "<<endl; 
         cin >> row;
     }
     
-    //myfile.close();
+    myfile.close();
     delete board;
     return 0;
 }
