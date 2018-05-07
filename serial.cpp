@@ -1,6 +1,6 @@
 #include "go.h"
 
-#define OMP 1
+#define OMP 0
 #if OMP == 1
 	#include <omp.h>
 #endif
@@ -19,9 +19,8 @@ int serialkernelMonteCarlo(GameBoard* myboard, int n){
 	if (n == 2 && size == 19) search = 8;
 	if (n == 3 && size == 9) search = 5;
 	if (n == 3 && size == 19) search = 4;
-	int pwr = raisePwr(search, n<<1);
-	int partial_pwr = int(pwr/search*search);
-
+	int pwr = raisePwr(search, n*2);
+	int partial_pwr = int(pwr/(search*search));
 	int xcor = 0;
 	int ycor = 0;
 	int prevrow = myboard->last_move/size;
