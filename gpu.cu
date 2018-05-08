@@ -236,12 +236,12 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
             max_pos = move_seq[idx * partial_num];
         }
     }
-    high_resolution_clock::time_point score_e = high_resolution_clock::now();
-    duration<double> score = duration_cast<duration<double>>(score_e - score_s);
-    cout<<"score time : " << score.count() <<"sec"<< endl;
+
     cudaFree(result);
     cudaFree(device_stones);
     cudaFree(device_result);
-
+    high_resolution_clock::time_point score_e = high_resolution_clock::now();
+    duration<double> score = duration_cast<duration<double>>(score_e - score_s);
+    cout<<"score and cleanup time : " << score.count() <<"sec"<< endl;
     return max_pos;
 }
