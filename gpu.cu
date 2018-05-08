@@ -175,8 +175,6 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     int* device_result; 
     
     //for timing purpose
-    std::clock_t start;
-    double duration = 0;
 
     cudaMalloc(&device_stones, num * s * s * sizeof(int));
     cudaMemcpy(device_stones, stones, num * s * s * sizeof(int), cudaMemcpyHostToDevice);
@@ -187,15 +185,10 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     cudaMalloc(&device_result, num * sizeof(int));
     cudaMemcpy(device_result, result, num * sizeof(int), cudaMemcpyHostToDevice);
 
-    duration = (std::clock() - start)/(double)CLOCKS_PER_SEC;
-    printf("Memcpy is  %f\n", duration);
 
-    double duration2 = 0;
-    std::clock_t start2;
 
     kernel_monte_carlo<<<blocks, threadsPerBlock>>>(device_stones, s, device_result);
 
-	duration2 = (std::clock() - start2)/(double)CLOCKS_PER_SEC;
 	printf("Kernel is  %f\n", duration2);
 
 	
