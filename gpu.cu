@@ -2,6 +2,11 @@
 #include <cuda_runtime.h>
 #include <driver_functions.h>
 #include "go.h"
+
+#include <chrono>
+using namespace std;
+using namespace std::chrono;
+
 static inline int cudaraisePwr(int num, int times){
 	int pwr = 1;
 	for (int i = 0; i < times; ++i)
@@ -175,7 +180,7 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     int* device_result; 
     
     //for timing purpose
-
+    high_resolution_clock::time_point mem_s = high_resolution_clock::now();  
     cudaMalloc(&device_stones, num * s * s * sizeof(int));
     cudaMemcpy(device_stones, stones, num * s * s * sizeof(int), cudaMemcpyHostToDevice);
 
@@ -185,17 +190,31 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     cudaMalloc(&device_result, num * sizeof(int));
     cudaMemcpy(device_result, result, num * sizeof(int), cudaMemcpyHostToDevice);
 
+    high_resolution_clock::time_point mem_e = high_resolution_clock::now();
+    duration<double> mem = duration_cast<duration<double>>(mem_e - mem_s);  
 
+
+    high_resolution_clock::time_point kernel_s = high_resolution_clock::now(); 
 
     kernel_monte_carlo<<<blocks, threadsPerBlock>>>(device_stones, s, device_result);
 
+    high_resolution_clock::time_point kernel_e = high_resolution_clock::now(); 
 
+    duration<double> kernel = duration_cast<duration<double>>(kernel_e - kernel_s);
 	
+
+    high_resolution_clock::time_point synch_s = high_resolution_clock::now();
     cudaThreadSynchronize();
+    high_resolution_clock::time_point synch_e = high_resolution_clock::now();
+    duration<double> kernel = duration_cast<duration<double>>(synch_e - synch_s);
+
 
     cudaMemcpy(result, device_result, num * sizeof(int), cudaMemcpyDeviceToHost);
 
 
+    cout<<"memcpy time : " << mem.count() <<"sec"<< endl;
+    cout<<"kernel time : " << kernel.count() <<"sec"<< endl;
+    cout<<"synch time : " << synch.count() <<"sec"<< endl;
     //can be parallized by omp or whatever
     int max_pos = rand() % (s * s);
     float max_val = -101.0;
