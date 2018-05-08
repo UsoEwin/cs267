@@ -6,10 +6,10 @@
 #include <iostream>
 #include <string>
 #include "go.h"
-#include <ctime>
-
-
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
+
 
 
 int cudaMonteCarlo(GameBoard* this_board, int n);
