@@ -2,9 +2,6 @@
 #include <cuda_runtime.h>
 #include <driver_functions.h>
 #include "go.h"
-#include <chrono>
-using namespace std;
-using namespace std::chrono;
 static inline int cudaraisePwr(int num, int times){
 	int pwr = 1;
 	for (int i = 0; i < times; ++i)
@@ -178,9 +175,6 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     int* device_result; 
     
     //for timing purpose
-    high_resolution_clock::time_point mem_s = high_resolution_clock::now();
-
-
 
     cudaMalloc(&device_stones, num * s * s * sizeof(int));
     cudaMemcpy(device_stones, stones, num * s * s * sizeof(int), cudaMemcpyHostToDevice);
@@ -191,15 +185,12 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     cudaMalloc(&device_result, num * sizeof(int));
     cudaMemcpy(device_result, result, num * sizeof(int), cudaMemcpyHostToDevice);
 
-    high_resolution_clock::time_point mem_e = high_resolution_clock::now();
-    duration<double> mem_time = duration_cast<duration<double>>(stop - start);
 
-    high_resolution_clock::time_point kernel_s = high_resolution_clock::now();
-    
+
     kernel_monte_carlo<<<blocks, threadsPerBlock>>>(device_stones, s, device_result);
-    
-    high_resolution_clock::time_point mem_e = high_resolution_clock::now();
-	
+
+	printf("Kernel is  %f\n", duration2);
+
 	
     cudaThreadSynchronize();
 
