@@ -189,7 +189,6 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
 
     kernel_monte_carlo<<<blocks, threadsPerBlock>>>(device_stones, s, device_result);
 
-	printf("Kernel is  %f\n", duration2);
 
 	
     cudaThreadSynchronize();
