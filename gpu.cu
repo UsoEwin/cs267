@@ -206,7 +206,7 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     high_resolution_clock::time_point synch_s = high_resolution_clock::now();
     cudaThreadSynchronize();
     high_resolution_clock::time_point synch_e = high_resolution_clock::now();
-    duration<double> kernel = duration_cast<duration<double>>(synch_e - synch_s);
+    duration<double> synch = duration_cast<duration<double>>(synch_e - synch_s);
 
 
     cudaMemcpy(result, device_result, num * sizeof(int), cudaMemcpyDeviceToHost);
