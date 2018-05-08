@@ -215,6 +215,7 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
     cout<<"memcpy time : " << mem.count() <<"sec"<< endl;
     cout<<"kernel time : " << kernel.count() <<"sec"<< endl;
     cout<<"synch time : " << synch.count() <<"sec"<< endl;
+    high_resolution_clock::time_point score_s = high_resolution_clock::now();
     //can be parallized by omp or whatever
     int max_pos = rand() % (s * s);
     float max_val = -101.0;
@@ -235,6 +236,9 @@ int cudaMonteCarlo(GameBoard* this_board, int n) {
             max_pos = move_seq[idx * partial_num];
         }
     }
+    high_resolution_clock::time_point score_e = high_resolution_clock::now();
+    duration<double> score = duration_cast<duration<double>>(score_e - score_s);
+    cout<<"score time : " << score.count() <<"sec"<< endl;
     cudaFree(result);
     cudaFree(device_stones);
     cudaFree(device_result);
