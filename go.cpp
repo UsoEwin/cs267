@@ -4,6 +4,7 @@
 //change this line depends you want omp or not
 #define OMP 1
 #define TRIVIALOMP 0
+
 #if OMP == 1
 	#include <omp.h>
 #endif
@@ -218,8 +219,8 @@ void getTerr(GameBoard* myboard) {
 			idx = r * size + c;
 			if (myboard->draw[idx] != 0){
 				diff = myboard->draw[idx];
-				for(int i = max(r - 4, 0); i < min(r + 5, size); i++){
-					for(int j = max(c - 4, 0); j < min(c + 5, size); j++){
+				for(int i = fmax(r - 4, 0); i < fmin(r + 5, size); i++){
+					for(int j = fmax(c - 4, 0); j < fmin(c + 5, size); j++){
 						dist = abs(r - i) + abs(c - j);
 						myboard->eval[i * size + j] += diff * map(dist);
 					}

@@ -6,7 +6,7 @@ CFLAGS = -std=c++11 -O3
 OMPFLAGS = -fopenmp
 NVOMPFLAGS = -Xcompiler -fopenmp
 # for k80
-NVFLAGS = -O3 -arch=compute_37 -code=sm_37
+NVFLAGS = -O3 -arch=compute_37 -code=sm_37 -std=c++11
 cudasources = goCuda.cpp gpu.cu go.cpp
 serialsources = goSerial.cpp serial.cpp go.cpp
 serialtargets = serialgo

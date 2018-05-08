@@ -33,17 +33,20 @@ int main(int argc, char** argv)
         addStone(board, row, col, 1);
         
         
-       	double duration = 0;
+  		high_resolution_clock::time_point start = high_resolution_clock::now();
+
         next_move = serialkernelMonteCarlo(board, 3);
 
         printf("add white stone %d\n", next_move);
 
+  		high_resolution_clock::time_point stop = high_resolution_clock::now();
+        duration<double> time_span = duration_cast<duration<double>>(stop - start);
         
         while(addStone(board, next_move/size, next_move%size, -1) ==0 ){
             next_move = rand() % (size * size);
         }
         printBoard(board);
-        printf("Time is  %f\n", duration);
+        cout<<"Overall time is : " << time_span.count() <<"sec"<< endl;
         printf("Step is  %d\n", step);
         //myfile << duration << " "<<step<<endl; 
         cin >> row;

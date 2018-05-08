@@ -2,8 +2,6 @@
 #include <cuda_runtime.h>
 #include <driver_functions.h>
 #include "go.h"
-#include <ctime>
-
 static inline int cudaraisePwr(int num, int times){
 	int pwr = 1;
 	for (int i = 0; i < times; ++i)

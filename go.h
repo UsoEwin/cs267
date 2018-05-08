@@ -1,20 +1,17 @@
 #ifndef GO_H
 #define GO_H
-#include <stdlib.h>
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
 #include <getopt.h>
 #include <iostream>
 #include <string>
-#include <ctime>
 #include <stdlib.h>
 //stones
 #define WHITE (-1)
 #define BLACK (1)
-//operators;
-#define min(a,b) ((a)<(b)?(a):(b))
-#define max(a,b) ((a)>(b)?(a):(b))
+#define fmin(a,b) ((a)<(b)?(a):(b))
+#define fmax(a,b) ((a)>(b)?(a):(b))
 #define abs(a) ((a)>=(0)?(a):(-a))
 
 //do not use cpp stl since cuda won't support it
