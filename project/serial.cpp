@@ -1,5 +1,7 @@
 #include "go.h"
-
+#include <chrono>
+using namespace std;
+using namespace std::chrono;
 #define OMP 0
 #if OMP == 1
 	#include <omp.h>
@@ -43,6 +45,8 @@ int serialkernelMonteCarlo(GameBoard* myboard, int n){
 		#pragma omp parallel
 		#pragma omp for
 	#endif
+	high_resolution_clock::time_point start = high_resolution_clock::now();
+
 	for (int ii=xcor; ii<xcor + search; ii++){
 		for (int jj=ycor; jj<ycor + search; jj++){
 			nextstep = ii * size + jj;
@@ -103,7 +107,9 @@ int serialkernelMonteCarlo(GameBoard* myboard, int n){
 			}
 		}
 	}
-
+	high_resolution_clock::time_point stop = high_resolution_clock::now();
+    duration<double> time_span = duration_cast<duration<double>>(stop - start);
+    cout<<"Searching kernel time is : " << time_span.count() <<"sec"<< endl;
 	return maxpos;
 }
 
